@@ -23,13 +23,13 @@
 #define LOAD 16
 #define DOMLIST 17
 
+char textData[20];
 
 int assignNum (char *input);
-int handleInput (int input);
 int getNextDomainThreadNum (int conNum);
 int createDomain (int conNum);
 void *manageDomain (void *arg);
-int createConnection (int conNum);
+void createConnection (int conNum);
 int isConnectionEstablished (char *hostname);
 int getNextConnThread ();
 void printNodeInfo (virNodeInfo nodeinfo);
@@ -38,3 +38,13 @@ int connectionWithSameURI (char *uri);
 void printDomInfo (virDomainInfoPtr dominfo);
 int isDomCreated (char *domName, int conNum);
 void printDomList (int conNum);
+
+gint delete_event(GtkWidget *, GdkEvent *, gpointer);
+void destroy(GtkWidget *, gpointer);
+void connectf(GtkWidget *, gpointer);
+void backf(GtkWidget *, gpointer);
+void createwidgets();
+void printWin(char *);
+int handleInput(GtkWidget *, gpointer);
+void getUri();
+void okf(GtkWidget *, gpointer);

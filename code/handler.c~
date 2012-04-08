@@ -31,6 +31,8 @@ struct connStruct {
 
 void createConnection (int conNum) {
 	char pr[100];
+	//fprintf (stdout, "Enter URI: ");
+	//scanf ("%s", uri);
 	if (connectionWithSameURI (textData) != -1) {
 		sprintf (pr, "Error: Connection to %s already exists\n\n", textData);
 		printWin(pr);

@@ -60,6 +60,10 @@ void printWin(char *s){
 
 void backf( GtkWidget *widget, gpointer   data ){
 	int i;
+	if (widget==buttons.text) {
+		bzero(textData, 20);
+		strcpy(textData, gtk_entry_get_text(GTK_ENTRY ( widget)));
+	}
   	gtk_widget_destroy(buttons.new);
 	gtk_widget_hide(buttons.wid[9]);  	
   	for (i=1; i<=8; i++)

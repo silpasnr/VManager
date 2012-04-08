@@ -35,7 +35,9 @@ void getUri(){
 	GtkWidget *text;    	
 	text = gtk_entry_new ();  
        	gtk_entry_set_text (GTK_ENTRY (text), "Enter the URI here");
-     	
+ 	g_signal_connect (text, "activate",
+		      G_CALLBACK (okf),
+		      (gpointer) CONNECT);     	
        	gtk_box_pack_end(GTK_BOX(buttons.wid[0]), text, TRUE, TRUE, 0);	
        	gtk_widget_show(text);
        	gtk_widget_show(buttons.ok);
@@ -51,7 +53,7 @@ void printWin(char *s){
 	
 	GtkWidget *label;    	
        	label = gtk_label_new (s);
-       	gtk_box_pack_end(GTK_BOX(buttons.wid[0]), label, TRUE, TRUE, 0);	
+       	gtk_box_pack_end(GTK_BOX (buttons.wid[0]), label, TRUE, TRUE, 0);	
        	gtk_widget_show(label);
        	gtk_widget_show(buttons.wid[9]);
        	buttons.new=label;

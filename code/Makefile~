@@ -1,5 +1,5 @@
 all:
-	gcc -g -Wall main.c handler.c ui.c gtk.c -o vmanager `pkg-config --cflags --libs gtk+-2.0` -lvirt -pthread 
+	gcc -g -Wall main.c ui.c handler.c gtk.c -o vmanager `pkg-config --cflags --libs gtk+-2.0` -lvirt -pthread 
 
 clean:
 	rm vmanager

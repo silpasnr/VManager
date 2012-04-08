@@ -77,42 +77,39 @@ int isConnectionEstablished (char *hostname) {
 	return -1;
 }
 
-
+void closeCon(){
+	int isret, conNum;
+	char pr[100];
+	isret = isConnectionEstablished (textData);
+	if (isret >= 0) {
+		conNum = isret;
+		strcpy (textData, virConnectGetHostname (connection[conNum].conn));
+	}
+	else {
+		sprintf (pr, "Error: Invalid connection to %s\n\n", textData);
+		printWin(pr);
+		return;
+	}
+	if (virConnectClose (connection[conNum].conn) < 0) {
+		sprintf (pr, "Error: Failed to close connection to %s\n\n", textData);
+		printWin(pr);
+		return;
+	}
+	connection[conNum].isconnected = 0;
+	sprintf (pr, "Connection to %s closed\n\n", textData);
+	printWin(pr);
+}
+	
 int handleInput (GtkWidget *widget, gpointer button) {
 	int input=(int) button;
-	//printf("%d", input);
 	switch (input) {
-		case CONNECT: {
-			getUri();
-		}
-		break;
+		case CONNECT:
+			textEntry("Enter the uri");
+			break;
 		
-		case CLOSECON: {
-			int isret, conNum;
-			char line [50];
-			char pr[100];
-			//g_print ("Enter hostname: ");
-			//scanf ("%s", line);
-			isret = isConnectionEstablished (textData);
-			if (isret >= 0) {
-				conNum = isret;
-				strcpy (textData, virConnectGetHostname (connection[conNum].conn));
-			}
-			else {
-				sprintf (pr, "Error: Invalid connection to %s\n\n", line);
-				printWin(pr);
-				return -1;
-			}
-			if (virConnectClose (connection[conNum].conn) < 0) {
-				sprintf (pr, "Error: Failed to close connection to %s\n\n", line);
-				printWin(pr);
-				return -1;
-			}
-			connection[conNum].isconnected = 0;
-			sprintf (pr, "Connection to %s closed\n\n", line);
-			printWin(pr);
-		}
-		break;
+		case CLOSECON: 
+			textEntry("Enter hostname here");
+			break;
 		
 	/*	case NUMDOMAIN: {
 			int numDomains, isret, conNum;

@@ -28,17 +28,18 @@ void destroy( GtkWidget *widget, gpointer data ){
     	gtk_main_quit();
 }
 
-void getUri(){
+void textEntry(char *s){
 	int i;	
 	for (i=1; i<=8; i++)
 		gtk_widget_hide(buttons.wid[i]);	
 	GtkWidget *text;    	
 	text = gtk_entry_new ();  
-       	gtk_entry_set_text (GTK_ENTRY (text), "Enter the URI here");
+       	gtk_entry_set_text (GTK_ENTRY (text), s);
  	g_signal_connect (text, "activate",
 		      G_CALLBACK (okf),
 		      (gpointer) CONNECT);     	
-       	gtk_box_pack_end(GTK_BOX(buttons.wid[0]), text, TRUE, TRUE, 0);	
+       	gtk_box_pack_end(GTK_BOX(buttons.wid[0]), text, TRUE, TRUE, 0);
+       	gtk_widget_hide(buttons.wid[9]);	
        	gtk_widget_show(text);
        	gtk_widget_show(buttons.ok);
        	buttons.new=text;
@@ -62,12 +63,11 @@ void printWin(char *s){
 
 void backf( GtkWidget *widget, gpointer   data ){
 	int i;
+	gtk_widget_hide(buttons.new);
   	gtk_widget_destroy(buttons.new);
 	gtk_widget_hide(buttons.wid[9]);  	
   	for (i=1; i<=8; i++)
 		gtk_widget_show(buttons.wid[i]);
-
-  	//g_print ("Yay!\n");
 }
 
 void okf( GtkWidget *widget, gpointer data ){
@@ -75,14 +75,17 @@ void okf( GtkWidget *widget, gpointer data ){
 	strcpy(textData, gtk_entry_get_text(GTK_ENTRY (buttons.new)));
   	gtk_widget_destroy(buttons.new);
 	gtk_widget_hide(buttons.ok);  
-	if (buttons.flag==1){
-		int conNum = getNextConnThread ();		
-		createConnection(conNum);
-		buttons.flag=0;
+	switch (buttons.flag){
+		case CONNECT : {
+			int conNum = getNextConnThread ();		
+			createConnection(conNum);
+			buttons.flag=CONNECT;
+		}
+			break;
+		case CLOSECON : closeCon();
+			break;
+		default :printWin("Invalid input");
 	}
-  //	for (i=1; i<=8; i++)
-//		gtk_widget_show(buttons.wid[i]);
-  	//g_print ("Yay!\n");
 }
 
 void createwidgets(){

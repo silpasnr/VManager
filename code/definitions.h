@@ -46,6 +46,6 @@ void backf(GtkWidget *, gpointer);
 void createwidgets();
 void printWin(char *);
 int handleInput(GtkWidget *, gpointer);
-void textEntry(char *);
+void textEntry(char *, int);
 void okf(GtkWidget *, gpointer);
 void closeCon();

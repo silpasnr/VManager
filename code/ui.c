@@ -28,7 +28,7 @@ void destroy( GtkWidget *widget, gpointer data ){
     	gtk_main_quit();
 }
 
-void textEntry(char *s){
+void textEntry(char *s, int ref){
 	int i;	
 	for (i=1; i<=8; i++)
 		gtk_widget_hide(buttons.wid[i]);	
@@ -44,7 +44,7 @@ void textEntry(char *s){
        	gtk_widget_show(buttons.ok);
        	buttons.new=text;
        	buttons.text=text;
-       	buttons.flag=1;
+       	buttons.flag=ref;
 }
 
 void printWin(char *s){
@@ -79,11 +79,11 @@ void okf( GtkWidget *widget, gpointer data ){
 		case CONNECT : {
 			int conNum = getNextConnThread ();		
 			createConnection(conNum);
-			buttons.flag=CONNECT;
 		}
 			break;
-		case CLOSECON : closeCon();
+		case CLOSECON : {closeCon();
 			break;
+		}
 		default :printWin("Invalid input");
 	}
 }

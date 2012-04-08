@@ -104,11 +104,11 @@ int handleInput (GtkWidget *widget, gpointer button) {
 	int input=(int) button;
 	switch (input) {
 		case CONNECT:
-			textEntry("Enter the uri");
+			textEntry("Enter the uri", CONNECT);
 			break;
 		
 		case CLOSECON: 
-			textEntry("Enter hostname here");
+			textEntry("Enter hostname here", CLOSECON);
 			break;
 		
 	/*	case NUMDOMAIN: {

@@ -48,3 +48,4 @@ void printWin(char *);
 int handleInput(GtkWidget *, gpointer);
 void textEntry(char *);
 void okf(GtkWidget *, gpointer);
+void closeCon();

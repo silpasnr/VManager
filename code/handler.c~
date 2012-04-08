@@ -102,20 +102,14 @@ void closeCon(){
 	
 int handleInput (GtkWidget *widget, gpointer button) {
 	int input=(int) button;
-	//printf("%d", input);
 	switch (input) {
-		case CONNECT: {
+		case CONNECT:
 			textEntry("Enter the uri");
-		}
-		break;
+			break;
 		
 		case CLOSECON: 
-
-			//g_print ("Enter hostname: ");
-			//scanf ("%s", line);
 			textEntry("Enter hostname here");
-
-		break;
+			break;
 		
 	/*	case NUMDOMAIN: {
 			int numDomains, isret, conNum;

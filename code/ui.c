@@ -79,7 +79,7 @@ void taskOnCreate(GtkWidget *widget, gpointer data){
 	insertinto("coden", domain, 14);		
 	g_print("%s\t%s\t%s\t%s\t%s",dev, name, vcpu, arch, domain);
 	}
-void domainCreation(){
+void *domainCreation(void *arg){
 	//gtk_widget_hide(buttons.new);
 	//gtk_widget_hide(buttons.ok);	
 	int i;
@@ -190,6 +190,7 @@ void domainCreation(){
 	install.wid[8]=title;    
 	install.wid[9]=vcpuField;		
     	//install
+    	manageDomain(arg);
     	    	    	    	    	
  }
 void textEntry(char *display, int ref){

@@ -53,3 +53,4 @@ void createDom();
 void domainCreation();
 void taskOnCreate(GtkWidget *, gpointer);
 char * getRadioSelected();
+void insertinto(char *, char *, int);

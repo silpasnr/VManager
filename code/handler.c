@@ -101,7 +101,7 @@ void createDomain (int conNum) {
 	int domainNum;
 	domainNum = getNextDomainThreadNum (conNum);
 	globalConHandler = conNum;
-	rc = pthread_create (&cThread[conNum].domainThread[domainNum], NULL, manageDomain, (void *)domainNum);
+	rc = pthread_create (&cThread[conNum].domainThread[domainNum], NULL, domainCreation, (void *)domainNum);
 	assert (rc == 0);
 	rc = pthread_join (cThread[conNum].domainThread[domainNum], NULL);
 	assert (rc == 0);
@@ -119,9 +119,10 @@ void *manageDomain (void *arg) {
 	conNum = globalConHandler;
 	domainNum = (int)arg;
 	char line[100];
-	char configFileName[MaxFileName], xmlConfig [MaxConfigSize];
-	printf ("XML config file name: ");
-	scanf ("%s", configFileName);
+	char pr[100];
+	char configFileName[]="coden", xmlConfig [MaxConfigSize];
+/*	printf ("XML config file name: ");
+	scanf ("%s", configFileName);*/
 	FILE *fp;
 	fp = fopen (configFileName, "r");
 	if (fp<0) {
@@ -134,16 +135,19 @@ void *manageDomain (void *arg) {
 	connection[conNum].domain[domainNum].dom = virDomainDefineXML (connection[conNum].conn, xmlConfig);
 	virConnectRef (connection[conNum].conn);
 	if (connection[conNum].domain[domainNum].dom==NULL) {
-		fprintf(stderr, "Error: Domain definition failed\n\n");
+		sprintf(pr, "Error: Domain definition failed\n\n");
+		printWin(pr);
 		return NULL;
 	}
 	if (virDomainCreate(connection[conNum].domain[domainNum].dom) < 0) {
 		virDomainFree(connection[conNum].domain[domainNum].dom);
-		fprintf(stderr, "Error: Cannot boot guest\n\n");
+		sprintf(pr, "Error: Cannot boot guest\n\n");
+		printWin(pr);
 		return NULL;
 	}
 	connection[conNum].domain[domainNum].iscreated = 1;
-	fprintf(stdout, "Guest has booted\n\n");
+	sprintf(pr, "Guest has booted\n\n");
+	printWin(pr);
 	return NULL;
 }
 
@@ -151,7 +155,7 @@ void createDom(){
 	int isret, conNum;
 			char pr[100];
 			isret = isConnectionEstablished (textData);
-			domainCreation();
+			//domainCreation();
 			if (isret >= 0) {
 				conNum = isret;
 			}
@@ -193,7 +197,7 @@ int handleInput (GtkWidget *widget, gpointer button) {
 		break;*/
 		
 		case CREATEDOM: {
-			domainCreation();
+			//domainCreation();
 			textEntry("Enter hostname here", CREATEDOM);
 		/*	int isret, conNum;
 			char hostname [50];

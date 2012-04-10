@@ -50,7 +50,7 @@ void taskOnOk(GtkWidget *, gpointer);
 void taskOnBack(GtkWidget *, gpointer);
 void closeCon();
 void createDom();
-void domainCreation();
+void * domainCreation(void *);
 void taskOnCreate(GtkWidget *, gpointer);
 char * getRadioSelected();
 void insertinto(char *, char *, int);

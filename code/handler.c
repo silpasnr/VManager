@@ -49,22 +49,18 @@ void createConnection (int conNum) {
 
 int connectionWithSameURI (char *uri) {
 	int i;
-	for (i=0; i < MaxNumConnections; i++) {
+	for (i=0; i < MaxNumConnections; i++) 
 		if (connection[i].isconnected == 1)
-			if (!strcmp(virConnectGetURI(connection[i].conn), uri)) {
+			if (!strcmp(virConnectGetURI(connection[i].conn), uri)) 
 				return i;
-			}
-	}
 	return -1;
 }
 
 int getNextConnThread () {
 	int i;
-	for (i=0; i < MaxNumConnections; i++) {
-		if (connection[i].conn == NULL) {
+	for (i=0; i < MaxNumConnections; i++)
+		if (connection[i].isconnected == 0)
 			return i;
-		}
-	}
 	return -1;
 }
 
@@ -100,6 +96,72 @@ void closeCon(){
 	printWin(pr);
 }
 	
+void createDomain (int conNum) {
+	int rc;
+	int domainNum;
+	domainNum = getNextDomainThreadNum (conNum);
+	globalConHandler = conNum;
+	rc = pthread_create (&cThread[conNum].domainThread[domainNum], NULL, manageDomain, (void *)domainNum);
+	assert (rc == 0);
+	rc = pthread_join (cThread[conNum].domainThread[domainNum], NULL);
+	assert (rc == 0);
+}
+
+int getNextDomainThreadNum (int conNum) {
+	int i;
+	for (i=0; i < MaxNumDomains; i++)
+		if (connection[conNum].domain[i].iscreated == 0)
+			return i;
+	return -1;
+}
+void *manageDomain (void *arg) {
+	int domainNum, conNum;
+	conNum = globalConHandler;
+	domainNum = (int)arg;
+	char line[100];
+	char configFileName[MaxFileName], xmlConfig [MaxConfigSize];
+	printf ("XML config file name: ");
+	scanf ("%s", configFileName);
+	FILE *fp;
+	fp = fopen (configFileName, "r");
+	if (fp<0) {
+		fprintf(stderr, "Error:Invalid XML file\n");
+		return NULL;
+	}
+	while (fgets(line, 100, fp) != NULL) {
+		strcat (xmlConfig, line);
+	}
+	connection[conNum].domain[domainNum].dom = virDomainDefineXML (connection[conNum].conn, xmlConfig);
+	virConnectRef (connection[conNum].conn);
+	if (connection[conNum].domain[domainNum].dom==NULL) {
+		fprintf(stderr, "Error: Domain definition failed\n\n");
+		return NULL;
+	}
+	if (virDomainCreate(connection[conNum].domain[domainNum].dom) < 0) {
+		virDomainFree(connection[conNum].domain[domainNum].dom);
+		fprintf(stderr, "Error: Cannot boot guest\n\n");
+		return NULL;
+	}
+	connection[conNum].domain[domainNum].iscreated = 1;
+	fprintf(stdout, "Guest has booted\n\n");
+	return NULL;
+}
+
+void createDom(){
+	int isret, conNum;
+			char pr[100];
+			isret = isConnectionEstablished (textData);
+			domainCreation();
+			if (isret >= 0) {
+				conNum = isret;
+			}
+			else {
+				sprintf(pr, "Error: Invalid connection to %s\n\n", textData);
+				printWin(pr);
+				return;
+			}
+			createDomain (conNum);
+	}
 int handleInput (GtkWidget *widget, gpointer button) {
 	int input=(int) button;
 	switch (input) {
@@ -128,10 +190,12 @@ int handleInput (GtkWidget *widget, gpointer button) {
 			numDomains = virConnectNumOfDomains (connection[conNum].conn);
 			fprintf (stdout, "Total number of domains in the host %s: %d\n\n",hostname, numDomains);
 		}
-		break;
+		break;*/
 		
 		case CREATEDOM: {
-			int isret, conNum;
+			domainCreation();
+			textEntry("Enter hostname here", CREATEDOM);
+		/*	int isret, conNum;
 			char hostname [50];
 			fprintf (stdout, "Enter hostname: ");
 			scanf ("%s", hostname);
@@ -143,11 +207,11 @@ int handleInput (GtkWidget *widget, gpointer button) {
 				fprintf (stderr, "Error: Invalid connection to %s\n\n", hostname);
 				return -1;
 			}
-			createDomain (conNum);
+			createDomain (conNum);*/
 		}
 		break;
 		
-		case SHUTDOWN: {
+		/*case SHUTDOWN: {
 			fprintf (stdout, "Enter domain name: ");
 			char domName [20];
 			int isret, conNum;
